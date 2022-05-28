@@ -2,7 +2,7 @@ var express = require("express");
 const multer = require("multer");
 
 var app = express();
-
+const PORT = process.env.PORT || 5000;
 app.set("view engine", "ejs");
 app.set("views", "./views");
 app.use(express.static("./public"));
@@ -127,6 +127,6 @@ io.on("connection", function (socket) {
   });
 });
 
-server.listen(3000);
+server.listen(PORT);
 
 require("./routes/home")(app);
