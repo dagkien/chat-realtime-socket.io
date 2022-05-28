@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor"
+      crossorigin="anonymous"
+    />
+    <script src="./socket.io/socket.io.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+      integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+  </head>
+  <style>
+    .list-user-online {
+      background-color: rgb(255, 255, 255);
+      height: 500px;
+      width: 300px;
+      border-radius: 3px;
+      border: 2px solid black;
+    }
+    .al-center {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .al-center-de {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-start;
+      width: 100%;
+      height: 100%;
+      padding: 10px;
+    }
+    ul > div {
+      margin-top: 10px;
+    }
+  </style>
+  <body>
+    <div class="container">
+      <div>
+        <header>
+          <h2 class="text-center p-3">Creat Account Chat RealTime</h2>
+        </header>
+
+        <div
+          class="p-3 bg-secondary border-3 rounded-2 flex-column"
+          style="
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            width: 300px;
+            height: 150px;
+          "
+        >
+          <div>
+            <label for="name" class="form-label text-white">Name</label>
+            <input
+              type="text"
+              placeholder="Enter your name..."
+              class="form-control"
+              id="name"
+            />
+          </div>
+          <div>
+            <button type="button" class="btn btn-primary">Create User</button>
+          </div>
+        </div>
+        <div class="list-user-online">
+          <ul class="al-center-de">
+            <div class="shadow-lg p-3 bg-body rounded w-100">
+              Larger shadow
+              <span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="46"
+                  height="46"
+                  fill="green"
+                  class="bi bi-dot"
+                  viewBox="0 0 16 16"
+                >
+                  <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z" />
+                </svg>
+              </span>
+            </div>
+          </ul>
+        </div>
+      </div>
+      <div class="viewChat"></div>
+    </div>
+  </body>
+</html>

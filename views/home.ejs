@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <base href="http://localhost:3000" />
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Binance Trader</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor"
+      crossorigin="anonymous"
+    />
+    <script src="./socket.io/socket.io.js"></script>
+    <link rel="stylesheet" href="./style.css">
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+      integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script src="https://aframe.io/releases/0.8.0/aframe.min.js"></script>
+    <script src="https://cdn.rawgit.com/jeromeetienne/AR.js/1.6.0/aframe/build/aframe-ar.js"></script>
+    <script src="simplepeer.min.js"></script>
+    <script src="./camera.js"></script>
+    <script>
+  
+      var socket = io("http://localhost:3000");
+      // function getFile(e) {
+      //   $("#upfile").click();
+      // }
+
+      // function sub(obj,event) {
+      //   var file = obj.value;
+      //   var fileName = file.split("\\");
+      //   $("#yourBtn").innerHTML = fileName[fileName.length - 1];
+      //   document.myForm.submit();
+      //   event.preventDefault();
+      // }
+      var isLogin = false;
+      var listUsers = [];
+      var constraints = { audio: false, video: { width: 1280, height: 720 } };
+
+      $(document).ready(function () {
+
+        $('#emoji-panel-btn').click(function(e) {
+          e.stopPropagation();
+          e.preventDefault();
+          if (!$('.emoji-panel').is(':visible')) {
+            $('.comment-textarea-wrap').append('<div class="emoji-panel"><ul class="nav nav-tabs" role="tablist"><li role="presentation" class="active"><a href="#e-t-1" aria-controls="e-t-1" role="tab" data-toggle="tab">😀</a></li><li role="presentation"><a href="#e-t-2" aria-controls="e-t-2" role="tab" data-toggle="tab">🦉</a></li><li role="presentation"><a href="#e-t-3" aria-controls="e-t-3" role="tab" data-toggle="tab">🥝</a></li><li role="presentation"><a href="#e-t-4" aria-controls="e-t-4" role="tab" data-toggle="tab">⚽️</a></li><li role="presentation"><a href="#e-t-5" aria-controls="e-t-5" role="tab" data-toggle="tab">🚀</a></li><li role="presentation"><a href="#e-t-6" aria-controls="e-t-6" role="tab" data-toggle="tab">🧱</a></li><li role="presentation"><a href="#e-t-7" aria-controls="e-t-7" role="tab" data-toggle="tab">💖</a></li></ul><div class="tab-content"><div role="tabpanel" class="tab-pane emoji-tab active" id="e-t-1"><span>😀</span><span>😃</span><span>😄</span><span>😁</span><span>😆</span><span>😅</span><span>😂</span><span>🤣</span><span>😊</span><span>😇</span><span>🙂</span><span>🙃</span><span>😉</span><span>😌</span><span>😍</span><span>🥰</span><span>😘</span><span>😗</span><span>😙</span><span>😚</span><span>😋</span><span>😛</span><span>😝</span><span>😜</span><span>🤪</span><span>🤨</span><span>🧐</span><span>🤓</span><span>😎</span><span>🤩</span><span>🥳</span><span>😏</span><span>😒</span><span>😞</span><span>😔</span><span>😟</span><span>😕</span><span>🙁</span><span>☹️</span><span>😣</span><span>😖</span><span>😫</span><span>😩</span><span>🥺</span><span>😢</span><span>😭</span><span>😤</span><span>😠</span><span>😡</span><span>🤬</span><span>🤯</span><span>😳</span><span>🥵</span><span>🥶</span><span>😱</span><span>😨</span><span>😰</span><span>😥</span><span>😓</span><span>🤗</span><span>🤔</span><span>🤭</span><span>🤫</span><span>🤥</span><span>😶</span><span>😐</span><span>😑</span><span>😬</span><span>🙄</span><span>😯</span><span>😦</span><span>😧</span><span>😮</span><span>😲</span><span>🥱</span><span>😴</span><span>🤤</span><span>😪</span><span>😵</span><span>🤐</span><span>🥴</span><span>🤢</span><span>🤮</span><span>🤧</span><span>😷</span><span>🤒</span><span>🤕</span><span>🤑</span><span>🤠</span><span>😈</span><span>👿</span><span>👹</span><span>👺</span><span>🤡</span><span>💩</span><span>👻</span><span>💀</span><span>☠️</span><span>👽</span><span>👾</span><span>🤖</span><span>🎃</span><span>😺</span><span>😸</span><span>😹</span><span>😻</span><span>😼</span><span>😽</span><span>🙀</span><span>😿</span><span>😾</span><span>👋</span><span>🤚</span><span>🖐</span><span>✋</span><span>🖖</span><span>👌</span><span>🤏</span><span>✌️</span><span>🤞</span><span>🤟</span><span>🤘</span><span>🤙</span><span>👈</span><span>👉</span><span>👆</span><span>🖕</span><span>👇</span><span>☝️</span><span>👍</span><span>👎</span><span>✊</span><span>👊</span><span>🤛</span><span>🤜</span><span>👏</span><span>🙌</span><span>👐</span><span>🤲</span><span>🤝</span><span>🙏</span><span>✍️</span><span>💅</span><span>🤳</span><span>💪</span><span>🦾</span><span>🦵</span><span>🦿</span><span>🦶</span><span>👣</span><span>👂</span><span>🦻</span><span>👃</span><span>🧠</span><span>🦷</span><span>🦴</span><span>👀</span><span>👁</span><span>👅</span><span>👄</span><span>💋</span><span>🩸</span><span>🧳</span><span>🌂</span><span>☂️</span><span>🧵</span><span>🧶</span><span>👓</span><span>🕶</span><span>🥽</span><span>🥼</span><span>🦺</span><span>👔</span><span>👕</span><span>👖</span><span>🧣</span><span>🧤</span><span>🧥</span><span>🧦</span><span>👗</span><span>👘</span><span>🥻</span><span>🩱</span><span>🩲</span><span>🩳</span><span>👙</span><span>👚</span><span>👛</span><span>👜</span><span>👝</span><span>🎒</span><span>👞</span><span>👟</span><span>🥾</span><span>🥿</span><span>👠</span><span>👡</span><span>🩰</span><span>👢</span><span>👑</span><span>👒</span><span>🎩</span><span>🎓</span><span>🧢</span><span>⛑</span><span>💄</span><span>💍</span><span>💼</span></div><div role="tabpanel" class="tab-pane emoji-tab" id="e-t-2"><span>🐶</span><span>🐱</span><span>🐭</span><span>🐹</span><span>🐰</span><span>🦊</span><span>🐻</span><span>🐼</span><span>🐻</span><span>🐨</span><span>🐯</span><span>🦁</span><span>🐮</span><span>🐷</span><span>🐽</span><span>🐸</span><span>🐵</span><span>🙈</span><span>🙉</span><span>🙊</span><span>🐒</span><span>🐔</span><span>🐧</span><span>🐦</span><span>🐤</span><span>🐣</span><span>🐥</span><span>🦆</span><span>🦅</span><span>🦉</span><span>🦇</span><span>🐺</span><span>🐗</span><span>🐴</span><span>🦄</span><span>🐝</span><span>🐛</span><span>🦋</span><span>🐌</span><span>🐞</span><span>🐜</span><span>🦟</span><span>🦗</span><span>🕷</span><span>🕸</span><span>🦂</span><span>🐢</span><span>🐍</span><span>🦎</span><span>🦖</span><span>🦕</span><span>🐙</span><span>🦑</span><span>🦐</span><span>🦞</span><span>🦀</span><span>🐡</span><span>🐠</span><span>🐟</span><span>🐬</span><span>🐳</span><span>🐋</span><span>🦈</span><span>🐊</span><span>🐅</span><span>🐆</span><span>🦓</span><span>🦍</span><span>🦧</span><span>🐘</span><span>🦛</span><span>🦏</span><span>🐪</span><span>🐫</span><span>🦒</span><span>🦘</span><span>🐃</span><span>🐂</span><span>🐄</span><span>🐎</span><span>🐖</span><span>🐏</span><span>🐑</span><span>🦙</span><span>🐐</span><span>🦌</span><span>🐩</span><span>🦮</span><span>🐕</span><span>🐈</span><span>🐓</span><span>🦃</span><span>🦚</span><span>🦜</span><span>🦢</span><span>🦩</span><span>🕊</span><span>🐇</span><span>🦝</span><span>🦨</span><span>🦡</span><span>🦦</span><span>🦥</span><span>🐁</span><span>🐀</span><span>🐿</span><span>🦔</span><span>🐾</span><span>🐉</span><span>🐲</span><span>🌵</span><span>🎄</span><span>🌲</span><span>🌳</span><span>🌴</span><span>🌱</span><span>🌿</span><span>☘️</span><span>🍀</span><span>🎍</span><span>🎋</span><span>🍃</span><span>🍂</span><span>🍁</span><span>🍄</span><span>🐚</span><span>🌾</span><span>💐</span><span>🌷</span><span>🌹</span><span>🥀</span><span>🌺</span><span>🌸</span><span>🌼</span><span>🌻</span><span>🌞</span><span>🌝</span><span>🌛</span><span>🌜</span><span>🌚</span><span>🌕</span><span>🌖</span><span>🌗</span><span>🌘</span><span>🌑</span><span>🌒</span><span>🌓</span><span>🌔</span><span>🌙</span><span>🌎</span><span>🌍</span><span>🌏</span><span>🪐</span><span>💫</span><span>⭐️</span><span>🌟</span><span>✨</span><span>⚡️</span><span>☄️</span><span>💥</span><span>🔥</span><span>🌪</span><span>🌈</span><span>☀️</span><span>🌤</span><span>⛅️</span><span>🌥</span><span>☁️</span><span>🌦</span><span>🌧</span><span>⛈</span><span>🌩</span><span>🌨</span><span>❄️</span><span>☃️</span><span>⛄️</span><span>🌬</span><span>💨</span><span>💧</span><span>💦</span><span>☔️</span><span>☂️</span><span>🌊</span><span>🌫</span></div><div role="tabpanel" class="tab-pane emoji-tab" id="e-t-3"><span>🍏</span><span>🍎</span><span>🍐</span><span>🍊</span><span>🍋</span><span>🍌</span><span>🍉</span><span>🍇</span><span>🍓</span><span>🍈</span><span>🍒</span><span>🍑</span><span>🥭</span><span>🍍</span><span>🥥</span><span>🥝</span><span>🍅</span><span>🍆</span><span>🥑</span><span>🥦</span><span>🥬</span><span>🥒</span><span>🌶</span><span>🌽</span><span>🥕</span><span>🧄</span><span>🧅</span><span>🥔</span><span>🍠</span><span>🥐</span><span>🥯</span><span>🍞</span><span>🥖</span><span>🥨</span><span>🧀</span><span>🥚</span><span>🍳</span><span>🧈</span><span>🥞</span><span>🧇</span><span>🥓</span><span>🥩</span><span>🍗</span><span>🍖</span><span>🦴</span><span>🌭</span><span>🍔</span><span>🍟</span><span>🍕</span><span>🥪</span><span>🥙</span><span>🧆</span><span>🌮</span><span>🌯</span><span>🥗</span><span>🥘</span><span>🥫</span><span>🍝</span><span>🍜</span><span>🍲</span><span>🍛</span><span>🍣</span><span>🍱</span><span>🥟</span><span>🦪</span><span>🍤</span><span>🍙</span><span>🍚</span><span>🍘</span><span>🍥</span><span>🥠</span><span>🥮</span><span>🍢</span><span>🍡</span><span>🍧</span><span>🍨</span><span>🍦</span><span>🥧</span><span>🧁</span><span>🍰</span><span>🎂</span><span>🍮</span><span>🍭</span><span>🍬</span><span>🍫</span><span>🍿</span><span>🍩</span><span>🍪</span><span>🌰</span><span>🥜</span><span>🍯</span><span>🥛</span><span>🍼</span><span>☕️</span><span>🍵</span><span>🧃</span><span>🥤</span><span>🍶</span><span>🍺</span><span>🍻</span><span>🥂</span><span>🍷</span><span>🥃</span><span>🍸</span><span>🍹</span><span>🧉</span><span>🍾</span><span>🧊</span><span>🥄</span><span>🍴</span><span>🍽</span><span>🥣</span><span>🥡</span><span>🥢</span><span>🧂</span></div><div role="tabpanel" class="tab-pane emoji-tab" id="e-t-4"><span>⚽️</span><span>🏀</span><span>🏈</span><span>⚾️</span><span>🥎</span><span>🎾</span><span>🏐</span><span>🏉</span><span>🥏</span><span>🎱</span><span>🪀</span><span>🏓</span><span>🏸</span><span>🏒</span><span>🏑</span><span>🥍</span><span>🏏</span><span>🥅</span><span>⛳️</span><span>🪁</span><span>🏹</span><span>🎣</span><span>🤿</span><span>🥊</span><span>🥋</span><span>🎽</span><span>🛹</span><span>🛷</span><span>⛸</span><span>🥌</span><span>🎿</span><span>⛷</span><span>🏂</span><span>🪂</span><span>🏋️</span><span>🏋️</span><span>🤼</span><span>🤸</span><span>⛹️</span><span>🤺</span><span>🤾</span><span>🏌️</span><span>🏇</span><span>🧘</span><span>🏄</span><span>🏊</span><span>🤽</span><span>🚣</span><span>🧗</span><span>🚵</span><span>🚴</span><span>🏆</span><span>🥇</span><span>🥈</span><span>🥉</span><span>🏅</span><span>🎖</span><span>🏵</span><span>🎗</span><span>🎫</span><span>🎟</span><span>🎪</span><span>🤹</span><span>🎭</span><span>🩰</span><span>🎨</span><span>🎬</span><span>🎤</span><span>🎧</span><span>🎼</span><span>🎹</span><span>🥁</span><span>🎷</span><span>🎺</span><span>🎸</span><span>🪕</span><span>🎻</span><span>🎲</span><span>♟</span><span>🎯</span><span>🎳</span><span>🎮</span><span>🎰</span><span>🧩</span></div><div role="tabpanel" class="tab-pane emoji-tab" id="e-t-5"><span>🚗</span><span>🚕</span><span>🚙</span><span>🚌</span><span>🚎</span><span>🏎</span><span>🚓</span><span>🚑</span><span>🚒</span><span>🚐</span><span>🚚</span><span>🚛</span><span>🚜</span><span>🦯</span><span>🦽</span><span>🦼</span><span>🛴</span><span>🚲</span><span>🛵</span><span>🏍</span><span>🛺</span><span>🚨</span><span>🚔</span><span>🚍</span><span>🚘</span><span>🚖</span><span>🚡</span><span>🚠</span><span>🚟</span><span>🚃</span><span>🚋</span><span>🚞</span><span>🚝</span><span>🚄</span><span>🚅</span><span>🚈</span><span>🚂</span><span>🚆</span><span>🚇</span><span>🚊</span><span>🚉</span><span>✈️</span><span>🛫</span><span>🛬</span><span>🛩</span><span>💺</span><span>🛰</span><span>🚀</span><span>🛸</span><span>🚁</span><span>🛶</span><span>⛵️</span><span>🚤</span><span>🛥</span><span>🛳</span><span>⛴</span><span>🚢</span><span>⚓️</span><span>⛽️</span><span>🚧</span><span>🚦</span><span>🚥</span><span>🚏</span><span>🗺</span><span>🗿</span><span>🗽</span><span>🗼</span><span>🏰</span><span>🏯</span><span>🏟</span><span>🎡</span><span>🎢</span><span>🎠</span><span>⛲️</span><span>⛱</span><span>🏖</span><span>🏝</span><span>🏜</span><span>🌋</span><span>⛰</span><span>🏔</span><span>🗻</span><span>🏕</span><span>⛺️</span><span>🏠</span><span>🏡</span><span>🏘</span><span>🏚</span><span>🏗</span><span>🏭</span><span>🏢</span><span>🏬</span><span>🏣</span><span>🏤</span><span>🏥</span><span>🏦</span><span>🏨</span><span>🏪</span><span>🏫</span><span>🏩</span><span>💒</span><span>🏛</span><span>⛪️</span><span>🕌</span><span>🕍</span><span>🛕</span><span>🕋</span><span>⛩</span><span>🛤</span><span>🛣</span><span>🗾</span><span>🎑</span><span>🏞</span><span>🌅</span><span>🌄</span><span>🌠</span><span>🎇</span><span>🎆</span><span>🌇</span><span>🌆</span><span>🏙</span><span>🌃</span><span>🌌</span><span>🌉</span><span>🌁</span></div><div role="tabpanel" class="tab-pane emoji-tab" id="e-t-6"><span>⌚️</span><span>📱</span><span>📲</span><span>💻</span><span>⌨️</span><span>🖥</span><span>🖨</span><span>🖱</span><span>🖲</span><span>🕹</span><span>🗜</span><span>💽</span><span>💾</span><span>💿</span><span>📀</span><span>📼</span><span>📷</span><span>📸</span><span>📹</span><span>🎥</span><span>📽</span><span>🎞</span><span>📞</span><span>☎️</span><span>📟</span><span>📠</span><span>📺</span><span>📻</span><span>🎙</span><span>🎚</span><span>🎛</span><span>🧭</span><span>⏱</span><span>⏲</span><span>⏰</span><span>🕰</span><span>⌛️</span><span>⏳</span><span>📡</span><span>🔋</span><span>🔌</span><span>💡</span><span>🔦</span><span>🕯</span><span>🪔</span><span>🧯</span><span>🛢</span><span>💸</span><span>💵</span><span>💴</span><span>💶</span><span>💷</span><span>💰</span><span>💳</span><span>💎</span><span>⚖️</span><span>🧰</span><span>🔧</span><span>🔨</span><span>⚒</span><span>🛠</span><span>⛏</span><span>🔩</span><span>⚙️</span><span>🧱</span><span>⛓</span><span>🧲</span><span>🔫</span><span>💣</span><span>🧨</span><span>🪓</span><span>🔪</span><span>🗡</span><span>⚔️</span><span>🛡</span><span>🚬</span><span>⚰️</span><span>🪦</span><span>⚱️</span><span>🏺</span><span>🔮</span><span>📿</span><span>🧿</span><span>💈</span><span>⚗️</span><span>🔭</span><span>🔬</span><span>🕳</span><span>🩹</span><span>🩺</span><span>💊</span><span>💉</span><span>🩸</span><span>🧬</span><span>🦠</span><span>🧫</span><span>🧪</span><span>🌡</span><span>🧹</span><span>🧺</span><span>🧻</span><span>🚽</span><span>🚰</span><span>🚿</span><span>🛁</span><span>🛀</span><span>🧼</span><span>🪒</span><span>🧽</span><span>🧴</span><span>🛎</span><span>🔑</span><span>🗝</span><span>🚪</span><span>🪑</span><span>🛋</span><span>🛏</span><span>🛌</span><span>🧸</span><span>🖼</span><span>🛍</span><span>🛒</span><span>🎁</span><span>🎈</span><span>🎏</span><span>🎀</span><span>🎊</span><span>🎉</span><span>🎎</span><span>🏮</span><span>🎐</span><span>🧧</span><span>✉️</span><span>📩</span><span>📨</span><span>📧</span><span>💌</span><span>📥</span><span>📤</span><span>📦</span><span>🏷</span><span>📪</span><span>📫</span><span>📬</span><span>📭</span><span>📮</span><span>📯</span><span>📜</span><span>📃</span><span>📄</span><span>📑</span><span>🧾</span><span>📊</span><span>📈</span><span>📉</span><span>🗒</span><span>🗓</span><span>📆</span><span>📅</span><span>🗑</span><span>📇</span><span>🗃</span><span>🗳</span><span>🗄</span><span>📋</span><span>📁</span><span>📂</span><span>🗂</span><span>🗞</span><span>📰</span><span>📓</span><span>📔</span><span>📒</span><span>📕</span><span>📗</span><span>📘</span><span>📙</span><span>📚</span><span>📖</span><span>🔖</span><span>🧷</span><span>🔗</span><span>📎</span><span>🖇</span><span>📐</span><span>📏</span><span>🧮</span><span>📌</span><span>📍</span><span>✂️</span><span>🖊</span><span>🖋</span><span>✒️</span><span>🖌</span><span>🖍</span><span>📝</span><span>✏️</span><span>🔍</span><span>🔎</span><span>🔏</span><span>🔐</span><span>🔒</span><span>🔓</span></div><div role="tabpanel" class="tab-pane emoji-tab" id="e-t-7"><span>❤️</span><span>🧡</span><span>💛</span><span>💚</span><span>💙</span><span>💜</span><span>🖤</span><span>🤍</span><span>🤎</span><span>💔</span><span>❣️</span><span>💕</span><span>💞</span><span>💓</span><span>💗</span><span>💖</span><span>💘</span><span>💝</span><span>💟</span><span>☮️</span><span>✝️</span><span>☪️</span><span>🕉</span><span>☸️</span><span>✡️</span><span>🔯</span><span>🕎</span><span>☯️</span><span>☦️</span><span>🛐</span><span>⛎</span><span>♈️</span><span>♉️</span><span>♊️</span><span>♋️</span><span>♌️</span><span>♍️</span><span>♎️</span><span>♏️</span><span>♐️</span><span>♑️</span><span>♒️</span><span>♓️</span><span>🆔</span><span>⚛️</span><span>🉑</span><span>☢️</span><span>☣️</span><span>📴</span><span>📳</span><span>🈶</span><span>🈚️</span><span>🈸</span><span>🈺</span><span>🈷️</span><span>✴️</span><span>🆚</span><span>💮</span><span>🉐</span><span>㊙️</span><span>㊗️</span><span>🈴</span><span>🈵</span><span>🈹</span><span>🈲</span><span>🅰️</span><span>🅱️</span><span>🆎</span><span>🆑</span><span>🅾️</span><span>🆘</span><span>❌</span><span>⭕️</span><span>🛑</span><span>⛔️</span><span>📛</span><span>🚫</span><span>💯</span><span>💢</span><span>♨️</span><span>🚷</span><span>🚯</span><span>🚳</span><span>🚱</span><span>🔞</span><span>📵</span><span>🚭</span><span>❗️</span><span>❕</span><span>❓</span><span>❔</span><span>‼️</span><span>⁉️</span><span>🔅</span><span>🔆</span><span>〽️</span><span>⚠️</span><span>🚸</span><span>🔱</span><span>⚜️</span><span>🔰</span><span>♻️</span><span>✅</span><span>🈯️</span><span>💹</span><span>❇️</span><span>✳️</span><span>❎</span><span>🌐</span><span>💠</span><span>Ⓜ️</span><span>🌀</span><span>💤</span><span>🏧</span><span>🚾</span><span>♿️</span><span>🅿️</span><span>🛗</span><span>🈳</span><span>🈂️</span><span>🛂</span><span>🛃</span><span>🛄</span><span>🛅</span><span>🚹</span><span>🚺</span><span>🚼</span><span>⚧</span><span>🚻</span><span>🚮</span><span>🎦</span><span>📶</span><span>🈁</span><span>🔣</span><span>ℹ️</span><span>🔤</span><span>🔡</span><span>🔠</span><span>🆖</span><span>🆗</span><span>🆙</span><span>🆒</span><span>🆕</span><span>🆓</span><span>0️⃣</span><span>1️⃣</span><span>2️⃣</span><span>3️⃣</span><span>4️⃣</span><span>5️⃣</span><span>6️⃣</span><span>7️⃣</span><span>8️⃣</span><span>9️⃣</span><span>🔟</span><span>🔢</span><span>#️⃣</span><span>*️⃣</span><span>⏏️</span><span>▶️</span><span>⏸</span><span>⏯</span><span>⏹</span><span>⏺</span><span>⏭</span><span>⏮</span><span>⏩</span><span>⏪</span><span>⏫</span><span>⏬</span><span>◀️</span><span>🔼</span><span>🔽</span><span>➡️</span><span>⬅️</span><span>⬆️</span><span>⬇️</span><span>↗️</span><span>↘️</span><span>↙️</span><span>↖️</span><span>↕️</span><span>↔️</span><span>↪️</span><span>↩️</span><span>⤴️</span><span>⤵️</span><span>🔀</span><span>🔁</span><span>🔂</span><span>🔄</span><span>🔃</span><span>🎵</span><span>🎶</span><span>➕</span><span>➖</span><span>➗</span><span>✖️</span><span>♾</span><span>💲</span><span>💱</span><span>™️</span><span>©️</span><span>®️</span><span>〰️</span><span>➰</span><span>➿</span><span>🔚</span><span>🔙</span><span>🔛</span><span>🔝</span><span>🔜</span><span>✔️</span><span>☑️</span><span>🔘</span><span>🔴</span><span>🟠</span><span>🟡</span><span>🟢</span><span>🔵</span><span>🟣</span><span>⚫️</span><span>⚪️</span><span>🟤</span><span>🔺</span><span>🔻</span><span>🔸</span><span>🔹</span><span>🔶</span><span>🔷</span><span>🔳</span><span>🔲</span><span>▪️</span><span>▫️</span><span>◾️</span><span>◽️</span><span>◼️</span><span>◻️</span><span>🟥</span><span>🟧</span><span>🟨</span><span>🟩</span><span>🟦</span><span>🟪</span><span>⬛️</span><span>⬜️</span><span>🟫</span><span>🔈</span><span>🔇</span><span>🔉</span><span>🔊</span><span>🔔</span><span>🔕</span><span>📣</span><span>📢</span><span>💬</span><span>💭</span><span>🗯</span><span>♠️</span><span>♣️</span><span>♥️</span><span>♦️</span><span>🃏</span><span>🎴</span><span>🀄️</span><span>🕐</span><span>🕑</span><span>🕒</span><span>🕓</span><span>🕔</span><span>🕕</span><span>🕖</span><span>🕗</span><span>🕘</span><span>🕙</span><span>🕚</span><span>🕛</span><span>🕜</span><span>🕝</span><span>🕞</span><span>🕟</span><span>🕠</span><span>🕡</span><span>🕢</span><span>🕣</span><span>🕤</span><span>🕥</span><span>🕦</span><span>🕧</span></div></div></div>');
+          } else {
+            $('.emoji-panel').remove();
+          }
+
+          $('.emoji-tab span').click(function() {
+            $('#inputValue').val($('#inputValue').val() + $(this).html());
+          });
+        });
+
+        // Ẩn Emoji khi bấm ra ngoài
+        $('body').click(function(e) {
+          if (!(e.target).closest('.emoji-panel')) {
+            if ($('.emoji-panel').is(':visible')) {
+              $('.emoji-panel').remove();
+            }
+          }
+        });
+
+        $("#typing").hide();
+        $("#typing").hide();
+        $(".friend-drawer--onhover").on("click", function () {
+          $(".chat-bubble").hide("slow").show("slow");
+        });
+
+        $("#btnSubmit").click(function () {
+          isLogin = true;
+          socket.emit("client-register", {name: $("#input-name").val(), avatar: $("#input-avatar").val(), id: ""});
+          $("#btnLogout").css("display", "flex");
+          $(".al-center-de").css("display", "block");
+          $(".list-user-online").css("height", "630px")
+         });
+
+        $("#btnLogout").click(function () {
+          socket.emit("client-send-Logout");
+          $(".form-register").show();
+          $("#title-listUser").css("display", "none");
+          $("#input-name").val("");
+          $("#input-avatar").val("");
+          $("#name_current").html("Name");
+          $("#avatar_current").attr("src", "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Breezeicons-actions-22-im-user.svg/1200px-Breezeicons-actions-22-im-user.svg.png");
+          $(".al-center-de").css("display", "none");
+          $("#btnLogout").css("display", "none");
+          isLogin = false;
+        });
+
+        $("#sendMessage").click(function () {
+          if(isLogin) {
+            socket.emit("client-send-message", $("#inputValue").val());
+          }
+          else {
+            alert("Bạn phải tạo tài khoản");
+          }
+          $("#inputValue").val(""); //reset input
+        });
+
+        $("#inputValue").focusin(function() {
+          if(isLogin) {
+            socket.emit("client-send-chatting")
+          }
+        })
+        $("#inputValue").focusout(function() {
+          socket.emit("client-send-stop-chatting")
+        })
+
+        $("#call_phone").click(function() {
+          if(isLogin) {
+            socket.emit("client-send-call-phone")
+          }
+        })
+
+
+      });
+      
+      function close_call() {
+        $(".window-call").css("display", "none");
+        $("#video").css("display", "none")
+        socket.emit("client-send-notication-failed-call",{name: $("#name_current").html(), avatar: $("#avatar_current").attr("src")})
+        localStream.getTracks().forEach( (track) => {
+        track.stop();
+        });
+        // stop only audio
+        localStream.getAudioTracks()[0].stop();
+        // stop only video
+        localStream.getVideoTracks()[0].stop();
+
+      }
+
+      socket.on("server-send-register-failed", function (data) {
+        alert("User đã tồn tại");
+        if(isLogin === true) {
+          $("#btnLogout").css("display", "none");
+        }
+        $("#input-name").val("");
+      });
+
+      socket.on("server-send-register-success", function (data) {
+        $("#name_current").html(data.name);
+        $("#avatar_current").attr("src", data.avatar);
+        $("#avatar_current2").attr("src", data.avatar);
+        $(".form-register").hide();
+        $("#title-listUser").css("display", "block");
+      });
+
+      socket.on("server-send-listUser", function (data) {
+        listUsers = data;
+        $(".al-center-de").html("");
+        $("#listUser_online").html("");
+
+        data.forEach(function (item) {
+          $(".al-center-de").append(
+            `<div class="shadow-lg p-3 bg-body rounded w-100">` +
+              item.name +
+              `<span><svg xmlns="http://www.w3.org/2000/svg" width="46" height="46" fill="green" class="bi bi-dot" viewBox="0 0 16 16"> <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z" /> </svg> </span> </div>`
+          );
+        });
+
+        data.forEach(function(item) {
+          $("#listUser_online").append(`
+              <div class="friend-drawer friend-drawer--onhover" onclick="joinRoom(this)" id="data-id" data-id="${item.id}">
+                <img
+                  class="profile-image"
+                  src="${item.avatar}"
+                  alt=""
+                />
+                <div class="text">
+                  <h6>${item.name} </h6>
+                  <p class="text-muted">Đã gửi 1 tin nhắn...</p>
+                </div>
+                <span class="time text-muted small">13:21</span>
+              </div>
+              <hr />          
+            `)
+        })
+      });
+
+      socket.on("server-send-chatting", function(data) {
+        // chatting
+        $("#typing").show();
+        $("#typing").html(data + " đang soạn tin nhắn...");
+      })
+      socket.on("server-send-stop-chatting", function(data) {
+        // stop chat
+        $("#typing").hide();
+      })
+      
+      socket.on("server-send-message", function (data) {
+        console.log(data);
+        $(".chat_panel").html("");
+
+        $(".chat-panel").append(`
+        <div class="row no-gutters">  
+          <div class="col-md-3 p-3 d-flex w-100">
+            <div
+               id="name_userCurrent"
+              style="
+                border-radius: 2%;
+                padding: 20px;
+                font-size: 15px;
+                color: white;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+              "
+            >
+            <img
+                  class="profile-image"
+                  id="avatar_current"
+                  src=${data.avatar}
+                  alt="Profile img"
+                />
+            </div>
+            <div>
+              <p style="width: 150px; text-align: left; margin-bottom: -10px; opacity: 0.5; margin-left: 27px; white-space: nowrap; overflow: hidden;text-overflow: ellipsis;" >${data.name}</p>
+              <div
+                class="chat-bubble chat-bubble--left"
+                style="width: fit-content; max-width: 100%; "
+                id="message_userCurrent"
+                >
+                ${data.value}
+              </div>
+            </div>
+          </div>`);
+      });
+
+
+      // call
+
+      socket.on("server-send-call-phone", function() {
+        if(isLogin) {
+          $(".window-call").css("display", "flex");
+          $("#div_audio").append(`
+              <audio controls autoplay style="display:none">
+                <source src="src="http://nhacchuongvui.com/wp-content/uploads/Nhac-chuong-cuoc-goi-Facebook-Messenger-www_nhacchuongvui_com.mp3?_=1"><source type="audio/mpeg" src="http://nhacchuongvui.com/wp-content/uploads/Nhac-chuong-cuoc-goi-Facebook-Messenger-www_nhacchuongvui_com.mp3?_=1" />  
+                </audio>
+            `)
+        }
+      })
+            
+      socket.on("server-send-this-call-phone", function() {
+        $("#video").css("display", "block")
+        if(isLogin) {
+          navigator.mediaDevices
+          .getUserMedia(constraints)
+          .then(function (mediaStream) {
+            window.localStream = mediaStream;
+              var video = document.querySelector("video");
+              video.srcObject = mediaStream;
+              video.onloadedmetadata = function (e) {
+                video.play();
+              };
+            })
+            .catch(function (err) {
+              console.log(err.name + ": " + err.message);
+            }); // always check for errors at the end.
+
+            const p = new SimplePeer({
+            initiator: location.hash === "#1",
+            trickle: false,
+          });
+
+          p.on("signal", (data) => {
+            console.log("SIGNAL", JSON.stringify(data));
+            document.querySelector("#outgoing").textContent = JSON.stringify(data);
+          });
+
+          $(".window-call").css("display", "none");
+          $(".container-call").css("display", "none");
+            $("#div_audio").append(`
+              <audio controls autoplay style="display:none">
+                <source src="src="http://nhacchuongvui.com/wp-content/uploads/Nhac-chuong-cuoc-goi-Facebook-Messenger-www_nhacchuongvui_com.mp3?_=1"><source type="audio/mpeg" src="http://nhacchuongvui.com/wp-content/uploads/Nhac-chuong-cuoc-goi-Facebook-Messenger-www_nhacchuongvui_com.mp3?_=1" />  
+              </audio>
+            `)
+        }
+      })
+
+      // join Room
+      const joinRoom = function (e) {
+        if(isLogin) {
+          console.log(e);
+          let id = $("#data-id").attr("data-id")
+          let user_select = listUsers.find(item => {
+            return item.id == id
+          })
+          console.log(user_select);
+          socket.emit("client-send-join-room", id);
+          $("#avatar_user_select_current").html("")
+          $("#name_user_select_current").html("")
+        }
+      }
+
+      
+
+    </script>
+  </head>
+  
+  <body>
+    <h2 class="text-center p-3 text-white">Messenger <svg xmlns="http://www.w3.org/2000/svg" width="31" height="31" fill="#fff" class="bi bi-messenger" viewBox="0 0 16 16">
+      <path d="M0 7.76C0 3.301 3.493 0 8 0s8 3.301 8 7.76-3.493 7.76-8 7.76c-.81 0-1.586-.107-2.316-.307a.639.639 0 0 0-.427.03l-1.588.702a.64.64 0 0 1-.898-.566l-.044-1.423a.639.639 0 0 0-.215-.456C.956 12.108 0 10.092 0 7.76zm5.546-1.459-2.35 3.728c-.225.358.214.761.551.506l2.525-1.916a.48.48 0 0 1 .578-.002l1.869 1.402a1.2 1.2 0 0 0 1.735-.32l2.35-3.728c.226-.358-.214-.761-.551-.506L9.728 7.381a.48.48 0 0 1-.578.002L7.281 5.98a1.2 1.2 0 0 0-1.735.32z"/>
+    </svg></h2>
+    <div class="container-big">
+      <div>
+        <header></header>
+
+        <div
+          class="p-3 bg-secondary border-3 rounded-2 flex-column"
+          style="margin-top: 20px; width: 300px"
+        >
+          <div
+            class="form-register"
+            style="
+              display: flex;
+              align-items: center;
+              flex-direction: column;
+              justify-content: space-around;
+              height: 200px;
+            "
+          >
+            <div>
+              <label for="input-name" class="form-label text-white">Name</label>
+              <input
+                type="text"
+                placeholder="Enter your name..."
+                class="form-control"
+                id="input-name"
+              />
+
+              <label for="input-avatar" class="form-label text-white">Avatar</label>
+              <input
+                type="text"
+                placeholder="Enter your link avatar..."
+                class="form-control"
+                id="input-avatar"
+              />
+            </div>
+
+            <!-- <form action="http://localhost:3000/" method="POST" enctype="multipart/form-data" name="myForm">
+              <div id="yourBtn" onclick="getFile()">Choose Images</div>
+              <div style='height: 0px;width: 0px; overflow:hidden;'><input id="upfile" type="file" value="upload" onchange="sub(this)" /></div>
+            </form> -->
+            <div>
+              <button type="button" class="btn btn-primary" id="btnSubmit">
+                Create User
+              </button>
+            </div>
+          </div>
+
+          <div style="color: white; display: none;" id="title-listUser">
+            Danh sách User online
+          </div>
+        </div>
+        <div class="list-user-online" style="position: relative">
+          <ul class="al-center-de">
+            <!-- append chill -->
+          </ul>
+          <div class="logout" id="btnLogout" style="display: none;">
+            <p>Logout</p>
+            <span style="width: 10px"></span>
+            <p>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="26"
+                height="26"
+                fill="currentColor"
+                class="bi bi-box-arrow-left"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M6 12.5a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v2a.5.5 0 0 1-1 0v-2A1.5 1.5 0 0 1 6.5 2h8A1.5 1.5 0 0 1 16 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 5 12.5v-2a.5.5 0 0 1 1 0v2z"
+                />
+                <path
+                  fill-rule="evenodd"
+                  d="M.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L1.707 7.5H10.5a.5.5 0 0 1 0 1H1.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3z"
+                />
+              </svg>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="viewChat">
+        <div id="video">
+          <div class="header_video">
+            <i>
+              <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-arrow-down-right-square" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm5.854 3.146a.5.5 0 1 0-.708.708L9.243 9.95H6.475a.5.5 0 1 0 0 1h3.975a.5.5 0 0 0 .5-.5V6.475a.5.5 0 1 0-1 0v2.768L5.854 5.146z"/>
+              </svg>
+            </i>
+            <i>
+              <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+              </svg>
+            </i>
+          </div>
+          <video></video>
+          <div class="footer_video">
+            <i onclick="close_call()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-telephone-x-fill" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511zm9.261 1.135a.5.5 0 0 1 .708 0L13 2.793l1.146-1.147a.5.5 0 0 1 .708.708L13.707 3.5l1.147 1.146a.5.5 0 0 1-.708.708L13 4.207l-1.146 1.147a.5.5 0 0 1-.708-.708L12.293 3.5l-1.147-1.146a.5.5 0 0 1 0-.708z"/>
+              </svg>
+            </i>
+          </div>
+        </div>
+        <div class="window-call">
+          <div class="group-call">
+            
+            <img
+                  class="profile-image"
+                  id="avatar_current"
+                  src="https://www.clarity-enhanced.net/wp-content/uploads/2020/06/filip.jpg"
+                  alt="Profile img"
+                  style="width: 90px; height: 90px; border-radius: 50%;"
+                />
+            <p><span>Name</span><span> đang gọi...</span></p>
+          </div>
+          <div class="container-call">
+            <!--телефонная трубка-->
+              <div id="call-phone" class="call-phone">
+                <div class="call-phone__circle"></div>
+                <div class="call-phone__circle-fill"></div>
+                <div class="call-phone__circle-img">
+                  <i class="icon-phone">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-telephone-inbound" viewBox="0 0 16 16">
+                      <path d="M15.854.146a.5.5 0 0 1 0 .708L11.707 5H14.5a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5v-4a.5.5 0 0 1 1 0v2.793L15.146.146a.5.5 0 0 1 .708 0zm-12.2 1.182a.678.678 0 0 0-1.015-.063L1.605 2.3c-.483.484-.661 1.169-.45 1.77a17.568 17.568 0 0 0 4.168 6.608 17.569 17.569 0 0 0 6.608 4.168c.601.211 1.286.033 1.77-.45l1.034-1.034a.678.678 0 0 0-.063-1.015l-2.307-1.794a.678.678 0 0 0-.58-.122l-2.19.547a1.745 1.745 0 0 1-1.657-.459L5.482 8.062a1.745 1.745 0 0 1-.46-1.657l.548-2.19a.678.678 0 0 0-.122-.58L3.654 1.328zM1.884.511a1.745 1.745 0 0 1 2.612.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z"/>
+                    </svg>
+                  </i>   
+                </div>
+              </div>
+          </div>
+          <div class="container-close-call">
+            <!--телефонная трубка-->
+                <div id="call-phone" class="call-phone">
+                  <div class="call-phone__circle-close"></div>
+                  <div class="call-phone__circle-fill-close"></div>
+                  <div class="call-phone__circle-img-close">
+                    <i class="icon-phone">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                        <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/>
+                      </svg>
+                    </i>   
+                  </div>
+                </div>
+              </div>
+            </div>
+        <div class="container">
+          <div class="row no-gutters">
+            <div class="col-md-4 border-right" style="border-right: 1px solid rgba(0,0,0,0.1); margin-right: -12px;">
+              <div class="settings-tray">
+                <img
+                  class="profile-image"
+                  id="avatar_current2"
+                  src="https://www.clarity-enhanced.net/wp-content/uploads/2020/06/filip.jpg"
+                  alt="Profile img"
+                />
+                <span style="padding: 10px" id="name_current">Name</span>
+                <span class="settings-tray--right">
+                  <i>
+                    <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="26"
+                    height="26"
+                    fill="currentColor"
+                    class="bi bi-app-indicator"
+                    viewBox="0 0 16 16"
+                  >
+                  <path
+                  d="M5.5 2A3.5 3.5 0 0 0 2 5.5v5A3.5 3.5 0 0 0 5.5 14h5a3.5 3.5 0 0 0 3.5-3.5V8a.5.5 0 0 1 1 0v2.5a4.5 4.5 0 0 1-4.5 4.5h-5A4.5 4.5 0 0 1 1 10.5v-5A4.5 4.5 0 0 1 5.5 1H8a.5.5 0 0 1 0 1H5.5z"
+                  />
+                  <path d="M16 3a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
+                </svg>
+              </i>
+              <i>
+
+                <svg
+                xmlns="http://www.w3.org/2000/svg"
+                    width="26"
+                    height="26"
+                    fill="currentColor"
+                    class="bi bi-bell"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zM8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z"
+                    />
+                  </svg>
+                </i>
+
+                <i>
+                  <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="26"
+                  height="26"
+                  fill="currentColor"
+                  class="bi bi-list"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"
+                    />
+                  </svg>
+                </i>
+                </span>
+              </div>
+              <div class="search-box">
+                <div class="input-wrapper">
+                  <span style="padding: 10px">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      fill="currentColor"
+                      class="bi bi-search"
+                      viewBox="0 0 16 16"
+                    >
+                      <path
+                        d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"
+                      />
+                    </svg>
+                  </span>
+                  <input placeholder="Search here" type="text" />
+                </div>
+              </div>
+
+              <div id="listUser_online">
+
+                <div class="friend-drawer friend-drawer--onhover" >
+                  <img
+                    class="profile-image"
+                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRgczvv3PsdzaYcNbqfaXPycHDfUWA3uorH8KEIO9hi4Avwo53isZWYlDlYDWtpqKvz2TM&usqp=CAU"
+                    alt=""
+                    id="avatar_user_select_current"
+                  />
+                  <div class="text">
+                    <h6 id="name_user_select_current">Ét ô Ét</h6>
+                    <p class="text-muted">Đã gửi 1 tin nhắn...</p>
+                  </div>
+                  <span class="time text-muted small">13:21</span>
+                </div>
+                <hr />
+              
+            </div>
+              
+            </div>
+            <div class="col-md-8 row-chat">
+              <div class="settings-tray">
+                <div class="friend-drawer no-gutters friend-drawer--grey">
+                  <img
+                    class="profile-image"
+                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRgczvv3PsdzaYcNbqfaXPycHDfUWA3uorH8KEIO9hi4Avwo53isZWYlDlYDWtpqKvz2TM&usqp=CAU"
+                    alt=""
+                  />
+                  <div class="text">
+                    <h6>Ét ô Ét </h6>
+                    <p class="text-muted">
+                      Trụ sở lùa gà FPT
+                    </p>
+                  </div>
+                  <span class="settings-tray--right"> 
+                    <i id="call_video">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-camera-video" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M0 5a2 2 0 0 1 2-2h7.5a2 2 0 0 1 1.983 1.738l3.11-1.382A1 1 0 0 1 16 4.269v7.462a1 1 0 0 1-1.406.913l-3.111-1.382A2 2 0 0 1 9.5 13H2a2 2 0 0 1-2-2V5zm11.5 5.175 3.5 1.556V4.269l-3.5 1.556v4.35zM2 4a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h7.5a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1H2z"/>
+                      </svg>
+                    </i>
+                    
+                    <i id="call_phone">           
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-telephone" viewBox="0 0 16 16">
+                        <path d="M3.654 1.328a.678.678 0 0 0-1.015-.063L1.605 2.3c-.483.484-.661 1.169-.45 1.77a17.568 17.568 0 0 0 4.168 6.608 17.569 17.569 0 0 0 6.608 4.168c.601.211 1.286.033 1.77-.45l1.034-1.034a.678.678 0 0 0-.063-1.015l-2.307-1.794a.678.678 0 0 0-.58-.122l-2.19.547a1.745 1.745 0 0 1-1.657-.459L5.482 8.062a1.745 1.745 0 0 1-.46-1.657l.548-2.19a.678.678 0 0 0-.122-.58L3.654 1.328zM1.884.511a1.745 1.745 0 0 1 2.612.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z"/>
+                      </svg>
+                    </i>
+
+                    <i id="close_chat">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                        <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/>
+                      </svg>
+                    </i>
+                  </span>
+                
+                </div>
+              </div>
+              <div style="position: absolute; bottom: 10%; opacity: 0.7;" id="typing">Name đang soạn tin ...</div>
+              <div class="chat-panel">
+                </div>
+                <div class="row">
+                  <div class="col-12">
+                    <div class="chat-box-tray">
+                      <span  id="emoji-panel-btn"  class="emoji-panel-btn comment-textarea-wrap">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="26"
+                          height="26"
+                          fill="currentColor"
+                          class="bi bi-emoji-laughing"
+                          viewBox="0 0 16 16"
+                        >
+                          <path
+                          d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"
+                          />
+                          <path
+                          d="M12.331 9.5a1 1 0 0 1 0 1A4.998 4.998 0 0 1 8 13a4.998 4.998 0 0 1-4.33-2.5A1 1 0 0 1 4.535 9h6.93a1 1 0 0 1 .866.5zM7 6.5c0 .828-.448 0-1 0s-1 .828-1 0S5.448 5 6 5s1 .672 1 1.5zm4 0c0 .828-.448 0-1 0s-1 .828-1 0S9.448 5 10 5s1 .672 1 1.5z"
+                          />
+                        </svg>
+                      </span>
+
+                      <input
+                        type="text"
+                        placeholder="Type your message here..."
+                        id="inputValue"
+                      />
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="26"
+                        height="26"
+                        fill="currentColor"
+                        class="bi bi-mic"
+                        viewBox="0 0 16 16"
+                      >
+                        <path
+                          d="M3.5 6.5A.5.5 0 0 1 4 7v1a4 4 0 0 0 8 0V7a.5.5 0 0 1 1 0v1a5 5 0 0 1-4.5 4.975V15h3a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1h3v-2.025A5 5 0 0 1 3 8V7a.5.5 0 0 1 .5-.5z"
+                        />
+                        <path
+                          d="M10 8a2 2 0 1 1-4 0V3a2 2 0 1 1 4 0v5zM8 0a3 3 0 0 0-3 3v5a3 3 0 0 0 6 0V3a3 3 0 0 0-3-3z"
+                        />
+                      </svg>
+                      <span style="width: 40px"></span>
+                      <span id="sendMessage">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="26"
+                          height="26"
+                          fill="currentColor"
+                          class="bi bi-arrow-right-circle"
+                          viewBox="0 0 16 16"
+                        >
+                          <path
+                            fill-rule="evenodd"
+                            d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z"
+                          />
+                        </svg>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    
+  </body>
+
+
+</html>
