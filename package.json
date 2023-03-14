@@ -21,7 +21,7 @@
     "simple-peer": "^9.11.1",
     "socket.io": "^4.5.1",
     "uuid": "^8.3.2",
-    "webpack": "^5.72.1"
+    "webpack": "^5.76.0"
   },
   "devDependencies": {
     "webpack-cli": "^4.9.2"
