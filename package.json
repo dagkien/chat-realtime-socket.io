@@ -19,7 +19,7 @@
     "nodemon": "^2.0.17",
     "peer": "^0.6.1",
     "simple-peer": "^9.11.1",
-    "socket.io": "^4.5.1",
+    "socket.io": "^4.6.0",
     "uuid": "^8.3.2",
     "webpack": "^5.72.1"
   },
